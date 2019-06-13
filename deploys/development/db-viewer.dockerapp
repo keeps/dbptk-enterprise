@@ -29,7 +29,7 @@ services:
     depends_on:
       - solr
   solr:
-    image: solr:7.5
+    image: solr:7.7
     ports:
       - ${SOLR_PORT}:8983
     command: -c # Use cloud mode
