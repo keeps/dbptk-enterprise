@@ -2,7 +2,7 @@
 # Version of the application
 version: 1.0.7
 # Name of the application
-name: db-viewer
+name: dbvtk
 # A short description of the application
 description: 
 # List of application maintainers with name and email for each
@@ -12,12 +12,12 @@ maintainers:
 
 ---
 # This section contains the Compose file that describes your application services.
-version: '3.2'
+version: '3.6'
 services:
   dbvtk:
     image: keeps/dbvtk:latest
     ports:
-      - 8080:8080
+      - ${DBVTK_PORT}:8080
       - 5005:5005
     environment:
       - SOLR_ZOOKEEPER_HOSTS=solr:9983
@@ -35,12 +35,11 @@ services:
   solr:
     image: solr:7.7
     ports:
-      - 8983:8983
+      - ${SOLR_PORT}:8983
     command: -c # Use cloud mode
 
 ---
 # This section contains the default values for your application parameters.
-SIARD: /tmp/siard
 DBVTK_PORT: 8080
-DBVTK_CONTEXT_PATH: /db
 SOLR_PORT: 8983
+SIARD: /tmp/siard
