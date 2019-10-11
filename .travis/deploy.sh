@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -ex
 
 ################################################
@@ -13,13 +12,13 @@ function deploy_to_dockerhub(){
   DBVTK_DEV_BRANCH=${2:-$TRAVIS_BRANCH}
 
   if [[ "$DOCKER_TAG" != "latest" ]]; then
-    docker tag keeps/dbvtk:latest keeps/dbvtk:staging
+    docker tag keeps/dbvtk:latest keeps/dbvtk:$TRAVIS_BRANCH
   fi
 
   # Push to https://hub.docker.com/r/keeps/dbvtk/
   docker push keeps/dbvtk:$DOCKER_TAG
 
-    ## Docker App
+## Docker App
 #   curl -fsSL --output "/tmp/docker-app-linux.tar.gz" "https://github.com/docker/app/releases/download/v0.8.0-beta2/docker-app-linux.tar.gz"
 #   tar xf "/tmp/docker-app-linux.tar.gz" -C /tmp/
 #   sudo install -b "/tmp/docker-app-standalone-linux" /usr/local/bin/docker-app
@@ -28,6 +27,13 @@ function deploy_to_dockerhub(){
 #   docker-app inspect 
 #   docker-app push --tag keeps/dbvtk:$DOCKER_TAG
 #   cd $TRAVIS_BUILD_DIR
+
+## Trigger external builds
+#   curl  --progress-bar -o /dev/null -L --request POST \
+#         --form ref=$DBVTK_DEV_BRANCH \
+#         --form token=$GITLAB_RODA_DEV_TRIGGER_TOKEN \
+#         --form "variables[DOCKER_TAG]=$DOCKER_TAG" \
+#         $GITLAB_RODA_DEV_TRIGGER
 }
 
 ################################################
@@ -41,10 +47,6 @@ if [[ ! -z "$DOCKER_USERNAME" ]]; then
   if [ "$TRAVIS_BRANCH" == "master" ]; then
     echo "Logic for master branch"
     deploy_to_dockerhub "latest" "$TRAVIS_BRANCH"
-
-  elif [ "$TRAVIS_BRANCH" == "development" ]; then
-    echo "Logic for development branch"
-    deploy_to_dockerhub "$TRAVIS_BRANCH" "$TRAVIS_BRANCH"
 
   elif [ "$TRAVIS_BRANCH" == "staging" ]; then
     echo "Logic for staging branch"
