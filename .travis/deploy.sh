@@ -28,12 +28,12 @@ function deploy_to_dockerhub(){
 #   docker-app push --tag keeps/dbvtk:$DOCKER_TAG
 #   cd $TRAVIS_BUILD_DIR
 
-## Trigger external builds
-#   curl  --progress-bar -o /dev/null -L --request POST \
-#         --form ref=$DBVTK_DEV_BRANCH \
-#         --form token=$GITLAB_RODA_DEV_TRIGGER_TOKEN \
-#         --form "variables[DOCKER_TAG]=$DOCKER_TAG" \
-#         $GITLAB_RODA_DEV_TRIGGER
+# Trigger external builds
+  curl  --progress-bar -o /dev/null -L --request POST \
+        --form ref=$DBVTK_DEV_BRANCH \
+        --form token=$GITLAB_DBVTK_DEV_TRIGGER_TOKEN \
+        --form "variables[DOCKER_TAG]=$DOCKER_TAG" \
+        $GITLAB_DBVTK_DEV_TRIGGER
 }
 
 ################################################
