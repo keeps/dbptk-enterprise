@@ -2,34 +2,6 @@
 
 Docker deployment for [db-visualization-toolkit](https://github.com/keeps/db-visualization-toolkit)
 
-### Deploy using Docker App (beta)
-
-Pre-requisites:
-1. Install [docker](https://docs.docker.com/install/)
-2. Install [docker compose](https://docs.docker.com/compose/install/)
-3. Install [docker app](https://github.com/docker/app)
-
-To execute in a docker-compose do:
-```
-docker-app render keeps/dbvtk:latest | docker-compose -f - up
-```
-
-To install in a docker swarm:
-```
-docker-app install keeps/dbvtk:latest
-```
-
-See possible parameters with:
-```
-docker-app inspect keeps/dbvtk:latest
-```
-
-Check [docker app](https://github.com/docker/app)  for instructions on how to set parameters.
-
-Open:
-* **dbvtk** at http://localhost:8080/db/
-* **solr** at http://localhost:8983/solr/
-
 ### Deploy using source code
 
 Pre-requisites:

@@ -18,22 +18,24 @@ function deploy_to_dockerhub(){
   # Push to https://hub.docker.com/r/keeps/dbvtk/
   docker push keeps/dbvtk:$DOCKER_TAG
 
-## Docker App
-#   curl -fsSL --output "/tmp/docker-app-linux.tar.gz" "https://github.com/docker/app/releases/download/v0.8.0-beta2/docker-app-linux.tar.gz"
-#   tar xf "/tmp/docker-app-linux.tar.gz" -C /tmp/
-#   sudo install -b "/tmp/docker-app-standalone-linux" /usr/local/bin/docker-app
-  
-#   cd deploys/development
-#   docker-app inspect 
-#   docker-app push --tag keeps/dbvtk:$DOCKER_TAG
-#   cd $TRAVIS_BUILD_DIR
+  ## Docker App BETA
+  #   curl -fsSL --output "/tmp/docker-app-linux.tar.gz" "https://github.com/docker/app/releases/download/v0.8.0-beta2/docker-app-linux.tar.gz"
+  #   tar xf "/tmp/docker-app-linux.tar.gz" -C /tmp/
+  #   sudo install -b "/tmp/docker-app-standalone-linux" /usr/local/bin/docker-app
+    
+  #   cd deploys/development
+  #   docker-app inspect 
+  #   docker-app push --tag keeps/dbvtk:$DOCKER_TAG
+  #   cd $TRAVIS_BUILD_DIR
 
-# Trigger external builds
-  curl  --progress-bar -o /dev/null -L --request POST \
-        --form ref=$DBVTK_DEV_BRANCH \
-        --form token=$GITLAB_DBVTK_DEV_TRIGGER_TOKEN \
-        --form "variables[DOCKER_TAG]=$DOCKER_TAG" \
-        $GITLAB_DBVTK_DEV_TRIGGER
+  # Trigger external builds
+  if [ "$TRAVIS_BRANCH" == "staging" ]; then
+    curl  --progress-bar -o /dev/null -L --request POST \
+          --form ref=$DBVTK_DEV_BRANCH \
+          --form token=$GITLAB_DBVTK_DEV_TRIGGER_TOKEN \
+          --form "variables[DOCKER_TAG]=$DOCKER_TAG" \
+          $GITLAB_DBVTK_DEV_TRIGGER
+  fi
 }
 
 ################################################
