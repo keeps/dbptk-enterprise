@@ -1,22 +1,22 @@
-# Database Visualization Toolkit Docker
+# Database Preservation Toolkit Enterprise deploy as Docker
 
 Docker deployment for [db-visualization-toolkit](https://github.com/keeps/db-visualization-toolkit)
 
-### Deploy using source code
+### Deploy
 
 Pre-requisites:
 1. Install [docker](https://docs.docker.com/install/)
 2. Install [docker compose](https://docs.docker.com/compose/install/)
 3. Download [docker-compose.yml](https://github.com/keeps/db-visualization-toolkit-docker/raw/master/deploys/development/docker-compose.yml)
-4. Run `SIARD=/path/to/folder/with/siard/files docker-compose up`
+4. Run `docker-compose up`
 5. Application should be available at [http://localhost:8080](http://localhost:8080)
 
 ### To add more databases to DBVTK
 
-1. Put the SIARD files in the SIARD folder defined on install.
-2. Open DBVTK, click on the "Load SIARD file" button on the top menu
-3. Input the SIARD as `/siard/file.siard` (the SIARD folder will be mounted within the container in /siard/)
-4. Click "LOAD SIARD FILE" button
+1. Open DBPTK, click on the "LOAD SIARD FILE" button on the top menu
+2. Browse to the SIARD files or drag and drop in the demarcated area
+3. Wait for upload process
+4. When upload is complete, click the "OPEN SIARD" button
 
 ### To stop the server
 
@@ -24,7 +24,7 @@ Use CTRL+C to stop the server.
 
 ### Run as a daemon
 
-Run `SIARD=/path/to/folder/with/siard/files docker-compose up -d` at deploys/development folder.
+Run `docker-compose up -d` at deploys/development folder.
 
 ### Shutdown daemon and cleanup
 
