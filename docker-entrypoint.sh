@@ -10,6 +10,6 @@ fi
 
 if [ $# -eq 0 ] ; then
     echo 'Starting'
-    exec java -Djava.security.egd=file:/dev/./urandom -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar /app.war
+    exec java -Djavax.xml.parsers.SAXParserFactory=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl -jar /app.war
 fi
 exec $@
