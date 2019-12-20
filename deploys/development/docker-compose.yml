@@ -7,6 +7,7 @@ services:
       - 5005:5005
     environment:
       - SOLR_ZOOKEEPER_HOSTS=solr:9983
+      - CAS_ENABLED=false
     #volumes:
       # configuration overrides
       # - ./config/logback.xml:/dbvtk/config/logback.xml:ro
