@@ -9,7 +9,9 @@ Pre-requisites:
 2. Install [docker compose](https://docs.docker.com/compose/install/)
 3. Download [docker-compose.yml](https://github.com/keeps/db-visualization-toolkit-docker/raw/master/deploys/development/docker-compose.yml)
 4. Run `docker-compose up`
-5. Application should be available at [http://localhost:8080](http://localhost:8080)
+5. Wait until all services have loaded (CAS can take a lot of time on first load)
+6. Application should be available at [http://localhost:8080](http://localhost:8080)
+7. Login with admin user (username: admin, password: admin) or with a normal user (username: user, password: user)
 
 ### To add more databases to DBVTK
 
