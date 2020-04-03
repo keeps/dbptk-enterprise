@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk-alpine
 
-LABEL application-name="Database Visualization Toolkit" \
+LABEL application-name="Database Preservation Toolkit Enterprise" \
       maintainer="admin@keep.pt" \
       vendor="KEEP SOLUTIONS"
 

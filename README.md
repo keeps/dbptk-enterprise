@@ -13,9 +13,13 @@ Pre-requisites:
 6. Application should be available at [http://localhost:8080](http://localhost:8080)
 7. Login with admin user (username: admin, password: admin) or with a normal user (username: user, password: user)
 
-### To add more databases to DBVTK
+### To add more databases to DBPTK Enterprise via REST API
+1. Update dbvtk-viewer.properties file and set *manage.upload.basePath* property with a path to the SIARD folder (reload the docker-compose to apply the changes)
+2. Replace the `<siardFilename>` with the name of the SIARD then run: ``curl -X POST "http://localhost:8080/api/v1/database" -H "accept: text/plain" -H "Content-Type: application/json" -d "<siardFilename>"``
 
-1. Open DBPTK, click on the "LOAD SIARD FILE" button on the top menu
+### To add more databases to DBPTK Enterprise Interface
+
+1. Open DBPTK Enterprise, click on the "LOAD SIARD FILE" button
 2. Browse to the SIARD files or drag and drop in the demarcated area
 3. Wait for upload process
 4. When upload is complete, click the "OPEN SIARD" button
