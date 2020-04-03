@@ -2,16 +2,14 @@
 
 Docker deployment for [db-visualization-toolkit](https://github.com/keeps/db-visualization-toolkit)
 
-### Deploy
+### Deploy (by default the CAS authentication is disable)
 
 Pre-requisites:
 1. Install [docker](https://docs.docker.com/install/)
 2. Install [docker compose](https://docs.docker.com/compose/install/)
 3. Download [docker-compose.yml](https://github.com/keeps/db-visualization-toolkit-docker/raw/master/deploys/development/docker-compose.yml)
 4. Run `docker-compose up`
-5. Wait until all services have loaded (CAS can take a lot of time on first load)
-6. Application should be available at [http://localhost:8080](http://localhost:8080)
-7. Login with admin user (username: admin, password: admin) or with a normal user (username: user, password: user)
+5. Application should be available at [http://localhost:8080](http://localhost:8080)
 
 ### To add more databases to DBPTK Enterprise via REST API
 1. Update dbvtk-viewer.properties file and set *manage.upload.basePath* property with a path to the SIARD folder (reload the docker-compose to apply the changes)
