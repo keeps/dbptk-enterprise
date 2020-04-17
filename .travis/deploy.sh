@@ -8,11 +8,11 @@ set -ex
 function deploy_to_dockerhub(){
   echo "Deploy to docker hub"
 
-  DOCKER_TAG=${1:-$TRAVIS_BRANCH}
+  DOCKER_TAG=${TAG:-$1}
   DBVTK_DEV_BRANCH=${2:-$TRAVIS_BRANCH}
 
   if [[ "$DOCKER_TAG" != "latest" ]]; then
-    docker tag keeps/dbvtk:latest keeps/dbvtk:$TRAVIS_BRANCH
+    docker tag keeps/dbvtk:latest keeps/dbvtk:$DOCKER_TAG
   fi
 
   # Push to https://hub.docker.com/r/keeps/dbvtk/
