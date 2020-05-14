@@ -4,12 +4,15 @@ Docker deployment for [db-visualization-toolkit](https://github.com/keeps/db-vis
 
 ### Deploy (by default the CAS authentication is disable)
 
+Requirements: a Linux machine. Windows machine will require you edit the docker-compose.yaml and transform config path `./config/dbvtk-viewer.properties` to Windows path style.
+
 Pre-requisites:
 1. Install [docker](https://docs.docker.com/install/)
 2. Install [docker compose](https://docs.docker.com/compose/install/)
-3. Download [docker-compose.yml](https://github.com/keeps/db-visualization-toolkit-docker/raw/master/deploys/development/docker-compose.yml)
-4. Run `docker-compose up`
-5. Application should be available at [http://localhost:8080](http://localhost:8080)
+3. Download and unzip this [project](https://github.com/keeps/db-visualization-toolkit-docker/archive/master.zip).
+4. Open a terminal within `deploys/development` folder)
+5. Run `docker-compose up`
+6. Application should be available at [http://localhost:8080](http://localhost:8080)
 
 ### To add more databases to DBPTK Enterprise via REST API
 1. Update dbvtk-viewer.properties file and set *manage.upload.basePath* property with a path to the SIARD folder (reload the docker-compose to apply the changes)
