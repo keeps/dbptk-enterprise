@@ -3,14 +3,13 @@
 Docker deployment for [db-visualization-toolkit](https://github.com/keeps/db-visualization-toolkit)
 
 ### Deploy (by default the CAS authentication is disable)
-
-Requirements: a Linux machine. Windows machine will require you edit the docker-compose.yaml and transform config path `./config/dbvtk-viewer.properties` to Windows path style.
+We suggest you use docker on Linux. Docker on Windows will require you to edit the docker-compose.yaml and transform config path `./config/dbvtk-viewer.properties` to Windows path style.
 
 Pre-requisites:
 1. Install [docker](https://docs.docker.com/install/)
 2. Install [docker compose](https://docs.docker.com/compose/install/)
 3. Download and unzip this [project](https://github.com/keeps/db-visualization-toolkit-docker/archive/master.zip).
-4. Open a terminal within `deploys/development` folder)
+4. Open a terminal within `deploys/development` folder
 5. Run `docker-compose up`
 6. Application should be available at [http://localhost:8080](http://localhost:8080)
 
