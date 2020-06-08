@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM openjdk:8-jre-buster
 
 LABEL application-name="Database Preservation Toolkit Enterprise" \
       maintainer="admin@keep.pt" \

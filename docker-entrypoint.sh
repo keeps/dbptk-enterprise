@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 # run extension scripts
 DIR=/docker-entrypoint.d
 
-if [ -d "$DIR" ]
+if [[ -d "$DIR" ]]
 then
-  /bin/run-parts "$DIR"
+  /bin/run-parts --regex '^.*$' --verbose "$DIR"
 fi
 
 if [ $# -eq 0 ] ; then
