@@ -2,7 +2,7 @@
 
 Docker deployment for [db-visualization-toolkit](https://github.com/keeps/db-visualization-toolkit)
 
-### Deploy (by default the CAS authentication is disable)
+### Deploy (by default the CAS authentication is disabled)
 We suggest you use docker on Linux. Docker on Windows will require you to edit the docker-compose.yaml and transform config path `./config/dbvtk-viewer.properties` to Windows path style.
 
 Pre-requisites:
