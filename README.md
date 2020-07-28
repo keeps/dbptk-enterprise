@@ -1,6 +1,6 @@
-# Database Preservation Toolkit Enterprise deploy as Docker
+# DBPTK Enterprise deployment via Docker
 
-Docker deployment for [db-visualization-toolkit](https://github.com/keeps/db-visualization-toolkit)
+Docker deployment of the [DBPTK User Interface](https://github.com/keeps/dbptk-ui) as a Web application.
 
 ### Deploy (by default the CAS authentication is disabled)
 We suggest you use docker on Linux. Docker on Windows will require you to edit the docker-compose.yaml and transform config path `./config/dbvtk-viewer.properties` to Windows path style.
@@ -8,7 +8,7 @@ We suggest you use docker on Linux. Docker on Windows will require you to edit t
 Pre-requisites:
 1. Install [docker](https://docs.docker.com/install/)
 2. Install [docker compose](https://docs.docker.com/compose/install/)
-3. Download and unzip this [project](https://github.com/keeps/db-visualization-toolkit-docker/archive/master.zip).
+3. Download and unzip this [project](https://github.com/keeps/dbptk-enterprise/archive/master.zip).
 4. Open a terminal within `deploys/development` folder
 5. Run `docker-compose up`
 6. Application should be available at [http://localhost:8080](http://localhost:8080)
@@ -39,17 +39,15 @@ Run `docker-compose down` at deploys/development folder.
 
 ## More information
 
-Configuration options are detailed in the [Database Visualization Toolkit Wiki](https://github.com/keeps/db-visualization-toolkit/wiki).
+Configuration options are detailed in the [DBPTK UI Wiki](https://github.com/keeps/dbptk-ui/wiki).
 
-Database Visualization Toolkit logos can be downloaded [here](https://github.com/keeps/db-preservation-toolkit/wiki/Logos).
+DBPTK logos can be downloaded [here](https://github.com/keeps/dbptk-developer/wiki/Logos).
 
-More information about these tools can be found at http://database-preservation.com
+More information about these tools can be found at https://database-preservation.com
 
 ## To report a problem or make a suggestion
 
-Create a new issue at https://github.com/keeps/db-visualization-toolkit-docker/issues/new
-
-Or if the problem/suggestion is related to the Database Preservation Toolkit, create the issue at https://github.com/keeps/db-preservation-toolkit/issues/new
+Create a new issue at https://github.com/keeps/dbptk-enterprise/issues/new
 
 ## Information & Commercial support
 
