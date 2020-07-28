@@ -43,11 +43,11 @@ Configuration options are detailed in the [DBPTK UI Wiki](https://github.com/kee
 
 DBPTK logos can be downloaded [here](https://github.com/keeps/dbptk-developer/wiki/Logos).
 
-More information about these tools can be found at https://database-preservation.com
+More information about these tools can be found at [database-preservation.com](https://database-preservation.com).
 
 ## To report a problem or make a suggestion
 
-Create a new issue at https://github.com/keeps/dbptk-enterprise/issues/new
+Create a new issue on [DBPTK Enterprise GitHub Issues](https://github.com/keeps/dbptk-enterprise/issues/new).
 
 ## Information & Commercial support
 
