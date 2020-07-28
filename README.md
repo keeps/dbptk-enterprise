@@ -1,4 +1,4 @@
-# DBPTK Enterprise deployment via Docker
+# Install DBPTK Enterprise via Docker
 
 Docker deployment of the [DBPTK User Interface](https://github.com/keeps/dbptk-ui) as a Web application.
 
