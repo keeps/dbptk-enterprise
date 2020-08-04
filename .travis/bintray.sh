@@ -2,7 +2,7 @@
 
 if [ "$TRAVIS_BRANCH" == "staging" ]; then
   #Use staging version of DBVTK
-  DBVTK_VERSION="staging"
+  DBVTK_VERSION="developer"
 else
   #get lastest version of DBVTK
   DBVTK_VERSION=$(curl -s  https://api.bintray.com/packages/keeps/db-visualization-toolkit/db-visualization-toolkit/versions/_latest \
