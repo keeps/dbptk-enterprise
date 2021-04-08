@@ -1,0 +1,57 @@
+name: Staging
+
+on: 
+  repository_dispatch: 
+    types: ["dispatch-staging"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+        # Download .war from GitHub workflow artifact
+      - name: Download WAR binary from GitHub artifact
+        uses: dawidd6/action-download-artifact@v2
+        with: 
+          workflow: staging.yml
+          branch: staging
+          repo: keeps/dbptk-ui
+       
+       # Renames the WAR
+      - name: Prepare WAR
+        run: mv artifact/dbvtk-staging.war app.war
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          tags: | 
+            keeps/dbvtk:staging
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+    
+  dispatch:
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger KEEPS GitLab CI/CD
+        uses: appleboy/gitlab-ci-action@master
+        with:
+          host: ${{ secrets.GITLAB_DBPTKE_DEV_TRIGGER }}
+          token: ${{ secrets.GITLAB_DBPTKE_DEV_TRIGGER_TOKEN }}
+          project_id: ${{ secrets.GITLAB_DBPTKE_PROJECT_ID }}
+          ref: 'staging'

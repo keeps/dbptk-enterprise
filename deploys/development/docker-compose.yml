@@ -1,17 +1,21 @@
 version: '3.2'
 services:
   dbptke:
-    image: keeps/dbvtk:staging
+    image: keeps/dbvtk:v2.5.4
     ports:
       - 8080:8080
+      - 5005:5005
     environment:
       - SOLR_ZOOKEEPER_HOSTS=solr:9983
       - CAS_ENABLED=false
+      - DBPTKE_SHARED_FOLDER=/volumes/siards
     volumes:
       # configuration overrides
       - ./config/dbvtk-viewer.properties:/dbvtk/config/dbvtk-viewer.properties:ro
+			# map /volumes/siards to the desired folder
     depends_on:
       - solr
+    entrypoint: java -Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl -Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -jar /app.war
   solr:
     image: solr:8.4
     ports:

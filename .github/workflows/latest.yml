@@ -1,0 +1,44 @@
+name: Latest
+
+on: 
+  repository_dispatch: 
+    types: ["dispatch-latest"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+        # Download .war from GitHub workflow artifact
+      - name: Download WAR binary from GitHub artifact
+        uses: dawidd6/action-download-artifact@v2
+        with: 
+          workflow: latest.yml
+          branch: master
+          repo: keeps/dbptk-ui
+       
+        # Renames the WAR
+      - name: Prepare WAR
+        run: mv artifact/dbvtk-latest.war app.war
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          tags: | 
+            keeps/dbvtk:latest
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
