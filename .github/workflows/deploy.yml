@@ -33,7 +33,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: | 
-            keeps/dbvtk:${{ github.event.client_payload.version }}
+            keeps/dbvtk:v${{ github.event.client_payload.version }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

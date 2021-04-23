@@ -1,3 +1,5 @@
+[![Deploy](https://github.com/keeps/dbptk-enterprise/actions/workflows/deploy.yml/badge.svg)](https://github.com/keeps/dbptk-enterprise/actions/workflows/deploy.yml)
+
 # Install DBPTK Enterprise via Docker
 
 Docker deployment of the [DBPTK User Interface](https://github.com/keeps/dbptk-ui) as a Web application.
