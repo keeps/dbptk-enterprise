@@ -1,0 +1,16 @@
+{
+  "@class": "org.apereo.cas.services.RegexRegisteredService",
+  "serviceId": "^https?://.*",
+  "name": "DBPTK Enterprise",
+  "description": "Web application to browse and search the content of multiple large archived databases.",
+  "id": 1001,
+  "evaluationOrder": 1,
+  "logoutType": "BACK_CHANNEL",
+  "attributeReleasePolicy": {
+    "@class": "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
+  },
+  "proxyPolicy": {
+    "@class": "org.apereo.cas.services.RegexMatchingRegisteredServiceProxyPolicy",
+    "pattern": "^https?://.*"
+  }
+}
