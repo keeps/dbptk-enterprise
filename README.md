@@ -7,11 +7,13 @@ Docker deployment of the [DBPTK User Interface](https://github.com/keeps/dbptk-u
 ### Deploy
 We suggest you use docker on Linux. Docker on Windows will require you to edit the docker-compose.yaml and transform all config path to Windows path style.
 
+This deployment comes with CAS configured. For more information consult the [README](deploys/development/README.md).
+
 Pre-requisites:
 1. Install [docker](https://docs.docker.com/install/)
 2. Install [docker compose](https://docs.docker.com/compose/install/)
 3. Download and unzip this [project](https://github.com/keeps/dbptk-enterprise/archive/master.zip)
-4. For more information about CAS configuration see [README](deploys/developement/README.md)
+4. For more information about CAS configuration see [README](deploys/development/README.md)
 5. Open a terminal within `deploys/development` folder
 6. Run `docker-compose up`
 7. Application should be available at [http://localhost:8080](http://localhost:8080)
