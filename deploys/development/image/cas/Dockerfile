@@ -1,27 +1,47 @@
-FROM openjdk:11-jre-slim as buildwar
-RUN cd /tmp \
-  && apt-get update \
-  && apt-get -y install git \
-  && git clone -b 6.3 --single-branch https://github.com/apereo/cas-overlay-template.git cas-overlay \
-  && mkdir -p /tmp/cas-overlay/src/main/webapp
-WORKDIR /tmp/cas-overlay
+FROM adoptopenjdk/openjdk11:alpine-slim AS overlay
 
-COPY build/build.gradle /tmp/cas-overlay/build.gradle
-RUN  ./gradlew clean build
+RUN apk add --no-cache git \
+  && mkdir -p /tmp/cas-overlay \
+  && git clone -b 6.3 --single-branch https://github.com/apereo/cas-overlay-template.git /tmp/cas-overlay
 
-FROM openjdk:11-jre-slim
-RUN mkdir /etc/cas \
-  && cd /etc/cas \
-  && keytool -genkey -noprompt -keystore thekeystore -storepass changeit -keypass changeit -validity 3650 \
-             -keysize 2048 -keyalg RSA -dname "CN=localhost, OU=MyOU, O=MyOrg, L=Somewhere, S=VA, C=US"
-RUN if [ -r /etc/cas/config/certificate.pem ]; then \
-       keytool -noprompt -importcert -keystore /etc/ssl/certs/java/cacerts -storepass changeit \
-               -file /etc/cas/config/certificate.pem -alias "casclient"; \
-    fi
-WORKDIR /root
-COPY --from=buildwar /tmp/cas-overlay/build/libs/cas.war .
-COPY etc/cas /etc/cas
+RUN mkdir -p cas-overlay
 
-EXPOSE 8443
-EXPOSE 8080
-CMD [ "/usr/local/openjdk-11/bin/java", "-jar", "/root/cas.war" ]
+RUN cp -r /tmp/cas-overlay/src/ /cas-overlay/src/ \
+ && cp -r /tmp/cas-overlay/gradle/ /cas-overlay/gradle/ \
+ && cp -r /tmp/cas-overlay/gradlew /tmp/cas-overlay/settings.gradle /tmp/cas-overlay/build.gradle /tmp/cas-overlay/gradle.properties /cas-overlay/
+
+RUN rm -rf /tmp/cas-overlay
+
+RUN mkdir -p ~/.gradle \
+    && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties \
+    && echo "org.gradle.configureondemand=true" >> ~/.gradle/gradle.properties \
+    && cd cas-overlay \
+    && chmod 750 ./gradlew \
+    && ./gradlew --version;
+
+COPY ./build/build.gradle /cas-overlay/
+
+RUN cd cas-overlay \
+    && ./gradlew clean build --parallel --no-daemon \
+    && ./gradlew createKeystore
+
+
+FROM adoptopenjdk/openjdk11:alpine-jre AS cas
+
+LABEL "Organization"="Apereo"
+LABEL "Description"="Apereo CAS"
+
+RUN cd / \
+    && mkdir -p /etc/cas/config \
+    && mkdir -p cas-overlay;
+
+COPY --from=overlay cas-overlay/build/libs/cas.war cas-overlay/
+COPY --from=overlay etc/cas/thekeystore /etc/cas/thekeystore
+COPY ./etc/cas/ /etc/cas/
+
+EXPOSE 8080 8443
+
+ENV PATH $PATH:$JAVA_HOME/bin:.
+
+WORKDIR /cas-overlay
+ENTRYPOINT ["java", "-server", "-noverify", "-Xmx2048M", "-jar", "cas.war"]
