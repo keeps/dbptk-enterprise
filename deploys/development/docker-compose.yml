@@ -2,6 +2,8 @@ version: "3.2"
 services:
   dbptke:
     image: keeps/dbvtk:latest
+    networks:
+      - zoonet
     ports:
       - 8080:8080
       - 5005:5005
@@ -22,15 +24,23 @@ services:
     entrypoint: java -Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl -Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -jar /app.war
   solr:
     image: solr:8.4
+    networks:
+      - zoonet
     ports:
       - 8983:8983
     command: -c # Use cloud mode
   cas:
-    image: cas:latest
-    build: 
-      context: ./image/cas
+    image: docker.labs.keep.pt/common/cas/cas-file:6.5.3
+    networks:
+      - zoonet
     ports:
       - 8181:8080
     volumes:
+      - ./thekeystore:/etc/cas/thekeystore
       - ./cas/attribute-repository.json:/etc/cas/attribute-repository.json
       - ./cas/users.txt:/etc/cas/config/users.txt
+      - ./cas/services:/etc/cas/config/services
+      - ./cas/cas.properties:/etc/cas/config/cas.properties
+
+networks:
+  zoonet:

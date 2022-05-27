@@ -1,0 +1,26 @@
+{
+  "@class": "org.apereo.cas.services.RegexRegisteredService",
+  "serviceId": "^https?://.*",
+  "name": "DBPTK Enterprise",
+  "description": "Web application to browse and search the content of multiple large archived databases.",
+  "id": 1001,
+  "evaluationOrder": 1,
+  "logoutType": "BACK_CHANNEL",
+  "accessStrategy": {
+    "@class": "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
+    "enabled": true,
+    "ssoEnabled": true,
+    "requiredAttributes": {
+      "@class": "java.util.HashMap",
+      "memberOf": [
+        "java.util.HashSet",
+        [
+          "users"
+        ]
+      ]
+    }
+  },
+  "attributeReleasePolicy": {
+    "@class": "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
+  }
+}

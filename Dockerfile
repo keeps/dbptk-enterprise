@@ -4,14 +4,9 @@ LABEL application-name="Database Preservation Toolkit Enterprise" \
       maintainer="admin@keep.pt" \
       vendor="KEEP SOLUTIONS"
 
-#--build-arg DBVTK=${VERSION}  
-ARG DBVTK=staging
-
 VOLUME /tmp
 EXPOSE 8080
 
-#RUN apk --no-cache add curl \
-#    ; curl -L "https://dl.bintray.com/keeps/db-visualization-toolkit/dbvtk-${DBVTK}.war" -o "app.war"
 COPY app.war /app.war
 
 # environment
