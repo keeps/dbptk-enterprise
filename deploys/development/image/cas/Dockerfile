@@ -2,7 +2,7 @@ FROM adoptopenjdk/openjdk11:alpine-slim AS overlay
 
 RUN apk add --no-cache git \
   && mkdir -p /tmp/cas-overlay \
-  && git clone -b 6.3 --single-branch https://github.com/apereo/cas-overlay-template.git /tmp/cas-overlay
+  && git clone -b 6.5 --single-branch https://github.com/apereo/cas-overlay-template.git /tmp/cas-overlay
 
 RUN mkdir -p cas-overlay
 

@@ -30,7 +30,9 @@ services:
       - 8983:8983
     command: -c # Use cloud mode
   cas:
-    image: docker.labs.keep.pt/common/cas/cas-file:6.5.3
+    image: cas:latest
+    build: 
+      context: ./image/cas
     networks:
       - zoonet
     ports:
