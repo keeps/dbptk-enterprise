@@ -13,13 +13,7 @@ COPY app.war /app.war
 ENV DBVTK_IMAGE_VERSION=v1.0
 ENV DBVTK_RUNNING_IN_DOCKER=yes
 ENV DBVTK_HOME=/dbvtk
-#ENV SOLR_ZOOKEEPER_HOSTS="solr:9983"
 
 COPY /docker-entrypoint.sh /
-COPY /docker-entrypoint.d/* /docker-entrypoint.d/
-
-# Work-around to achieve optional copy
-ONBUILD COPY /docker-entrypoint.d/* Dockerfile /docker-entrypoint.d/
-ONBUILD RUN rm /docker-entrypoint.d/Dockerfile
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
