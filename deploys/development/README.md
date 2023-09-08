@@ -1,13 +1,13 @@
 # CAS
 
-### Configure available users
+## Configure available users
 
 On `cas/` directory there are two files:
 
 * users.txt - one user per line with the following syntax: `<username>::<password>`
 * attribute-repository.json - a JSON file with a set of attributes per user
 
-#### Pratical example
+## Practical example
 
 Let's add a new user to CAS that belongs to the administrators with username "test". To do so we need to edit the `users.txt` file and add the following line:
 
