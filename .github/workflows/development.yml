@@ -22,7 +22,7 @@ jobs:
        
        # Renames the WAR
       - name: Prepare WAR
-        run: mv artifact/dbvtk-staging.war app.war
+        run: mv artifact/dbvtk-development.war app.war
 
       - name: Login to DockerHub
         uses: docker/login-action@v1 
