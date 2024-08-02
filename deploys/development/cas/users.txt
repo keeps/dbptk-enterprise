@@ -1,2 +1,1 @@
-admin::admin
-user::user
+admin::%Y9botqofTJx44w

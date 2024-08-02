@@ -1,7 +1,6 @@
-version: "3.2"
 services:
   dbptke:
-    image: keeps/dbvtk:latest
+    image: docker.io/library/dbvtk-test
     container_name: dbptk-enterprise
     networks:
       - zoonet
@@ -9,28 +8,55 @@ services:
       - 8080:8080
       - 5005:5005
     environment:
-      - SOLR_ZOOKEEPER_HOSTS=solr:9983
+      - SOLR_ZOOKEEPER_HOSTS=zoo:2181
       - CAS_ENABLED=true
       - CAS_INTERNAL_URL=http://cas:8080
-      - CAS_EXTERNAL_URL=http://localhost:8181
-      - DBVTK_INTERNAL_URL=http://dbptke:8080
-      - DBVTK_EXTERNAL_URL=http://localhost:8080
+      - CAS_EXTERNAL_URL=http://192.168.2.67:8081
+      - DBVTK_EXTERNAL_URL=http://192.168.2.67:8080
       - DBPTKE_SHARED_FOLDER=/volumes/siards
     volumes:
       # configuration overrides
-      - ./dbptke/config/dbvtk-viewer.properties:/dbvtk/config/dbvtk-viewer.properties:ro
+      - ./dbptke/config/:/dbvtk/config/
+      - ./siards/:/dbvtk/SIARD-files/
       # map /volumes/siards to the desired folder
+    #labels:
+      #- "traefik.http.routers.dbptke.rule=PathPrefix(`/`)"
+      #- "traefik.http.routers.dbptke.entrypoints=web-secure"
+      #- "traefik.http.services.dbptke.loadbalancer.server.port=8080"
+      #- "traefik.http.routers.dbptke.tls"
     depends_on:
       - solr
-    entrypoint: java -Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl -Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -jar /app.war
+    entrypoint: java --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED -Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl -Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl -Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar /app.war
+
+  zoo:
+    image: docker.io/zookeeper:3.9-jre-17
+    restart: unless-stopped
+    ports:
+      - "2181:2181"
+    networks:
+      - zoonet      
+    environment:
+      - ZOO_4LW_COMMANDS_WHITELIST=mntr,conf,ruok
+    volumes:
+      - zookeeper_data2:/data
+      - zookeeper_datalog2:/datalog
   solr:
-    image: solr:8
+    image: docker.io/solr:9
     container_name: solr
+    restart: unless-stopped
     networks:
       - zoonet
     ports:
-      - 8983:8983
-    command: -c # Use cloud mode
+      - "8983:8983"
+    environment:
+      ZK_HOST: zoo:2181
+    depends_on:
+      - zoo
+    command:
+      - -c
+    volumes:
+      - solr_data:/var/solr
+
   cas:
     image: docker.io/library/cas:latest
     container_name: cas
@@ -39,13 +65,44 @@ services:
     networks:
       - zoonet
     ports:
-      - 8181:8080
+      - "8081:8080"
     volumes:
       - ./thekeystore:/etc/cas/thekeystore
       - ./cas/attribute-repository.json:/etc/cas/attribute-repository.json
       - ./cas/users.txt:/etc/cas/users.txt
       - ./cas/services:/etc/cas/services
       - ./cas/cas.properties:/etc/cas/config/cas.properties
-
+    #labels:
+    #  - "traefik.http.routers.cas.rule=PathPrefix(`/cas/`)"
+    #  - "traefik.http.routers.cas.entrypoints=web-secure"
+    #  - "traefik.http.services.cas.loadbalancer.server.port=8080"
+    #  - "traefik.http.routers.cas.tls"
+      
+  traefik:
+    image: traefik:v2.11.1
+    ports:
+      - 80:80
+      #- 443:443
+      - 443:443
+    networks:
+      - zoonet      
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik/config.yaml:/config.yaml:ro"
+      - "./traefik/ssl/dbptk-demo-dk.com.crt:/domain.crt:ro"
+      - "./traefik/ssl/dbptk-demo-dk.com.key:/domain.key:ro"
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.network=zoonet"
+      - "--providers.file.filename=/config.yaml"
+      - "--entrypoints.web-secure.address=:443"
+    labels:
+      - "traefik.http.routers.traefik.entrypoints=web-secure"
+      - "traefik.http.services.traefik.loadbalancer.server.port=80"
+  
 networks:
   zoonet:
+volumes:
+  zookeeper_data2:
+  zookeeper_datalog2:
+  solr_data:
