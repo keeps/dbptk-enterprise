@@ -46,6 +46,17 @@ services:
       - ./cas/users.txt:/etc/cas/users.txt
       - ./cas/services:/etc/cas/services
       - ./cas/cas.properties:/etc/cas/config/cas.properties
+  swagger:
+    image: docker.io/swaggerapi/swagger-ui:v5.13.0
+    restart: on-failure
+    networks:
+      - zoonet
+    ports:
+      - "8081:8080"
+    environment:
+      - URL=http://localhost:8080/openapi.json
+      - DOC_EXPANSION=none
+      - VALIDATOR_URL=none
 
 networks:
   zoonet:
