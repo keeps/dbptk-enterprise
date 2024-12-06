@@ -1,5 +1,4 @@
-FROM openjdk:8-jre-buster
-
+FROM openjdk:21
 LABEL application-name="Database Preservation Toolkit Enterprise" \
       maintainer="admin@keep.pt" \
       vendor="KEEP SOLUTIONS"
