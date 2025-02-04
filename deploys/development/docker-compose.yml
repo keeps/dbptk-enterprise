@@ -1,7 +1,7 @@
 version: "3.2"
 services:
   dbptke:
-    image: keeps/dbvtk:latest
+    image: keeps/dbvtk:v3.0.0
     container_name: dbptk-enterprise
     networks:
       - zoonet
@@ -22,15 +22,17 @@ services:
       # map /volumes/siards to the desired folder
     depends_on:
       - solr
-    entrypoint: java -Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl -Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -jar /app.war
+    entrypoint: java -Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl -Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005 -jar /app.war
   solr:
-    image: solr:8
+    image: solr:9
     container_name: solr
     networks:
       - zoonet
     ports:
       - 8983:8983
     command: -c # Use cloud mode
+    volumes:
+      - solr_data:/var/solr/
   cas:
     image: docker.io/library/cas:latest
     container_name: cas
@@ -60,3 +62,5 @@ services:
 
 networks:
   zoonet:
+volumes:
+  solr_data: 
