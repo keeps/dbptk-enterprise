@@ -1,6 +1,6 @@
-# Upgrade from DBPTK 2.X to DBPTK 3
+# Upgrade from DBPTK Enterprise 2.X to DBPTK Enterprise 3.X
 
-This guide outlines the steps required to upgrade DBPTK from version 2.X to version 3. 
+This guide outlines the steps required to upgrade DBPTK Enterprise from version 2.X to version 3. 
 Before starting the new version of DBPTK follow these steps.
 
 ## Add Your Machine's IP Address to DBPTK Whitelist
