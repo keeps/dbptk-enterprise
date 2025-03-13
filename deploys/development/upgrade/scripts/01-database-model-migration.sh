@@ -3,6 +3,7 @@
 # Get the first argument as the dbvtk directory path
 DBPTKE_DIR="$1"
 HOST="$2"
+DELETE_DBS_NOT_FOUND="false"
 
 # Check if the DBPTK directory argument is provided
 if [ -z "$1" ]; then
@@ -26,6 +27,8 @@ fi
 
 # Define the path to the 'databases' subdirectory
 DATABASES_DIR="$DBPTKE_DIR/databases"
+
+mkdir -p "$DATABASES_DIR/database-garbage/"
 
 # Check if the 'databases' directory exists
 if [ ! -d "$DATABASES_DIR" ]; then
@@ -53,38 +56,62 @@ for subdir in "$DATABASES_DIR"/*; do
 
     STATUS=$(echo "$DATABASE" | jq -r '.status')
     VERSION=$(echo "$DATABASE" | jq -r '.version')
-    METADATA=$(echo "$DATABASE" | jq -r '.metadata')
     LOADED_AT=$(echo "$DATABASE" | jq -r '.loadedAt')
     SIZE=$(echo "$DATABASE" | jq -r '.size')
 
+    echo "$DATABASE" | jq '.metadata' > tmp_metadata.json
+
+    IS_ARRAY=$(echo "$DATABASE" | jq 'if .permissions | type == "array" then 1 else 0 end')
+
     if [[ "$HTTP_CODE" -ne 200 ]]; then
         echo "Error getting database with id $UUID: Request failed with HTTP code $HTTP_CODE."
-        exit 1
+
+        if [[ "$DELETE_DBS_NOT_FOUND" == "true" ]]; then
+          echo "Moving directory $subdir to $DATABASES_DIR/database-garbage/"
+          mv "$subdir" "$DATABASES_DIR/database-garbage/"
+        fi
+        continue
     fi
 
     for input_file in "$subdir"/database-*; do
       if [ -f "$input_file" ]; then
-        echo "Updating file: $input_file"
         
-        # Modify the JSON structure using jq
-        jq --arg status "$STATUS" --arg siardVersion "$VERSION" --arg metadata "$METADATA" --arg loadedAt "$LOADED_AT" --arg size "$SIZE" '{
-          version,
-          status: $status,
-          siardVersion: $siardVersion,
-          id,
-          siard: (.siard + {"size": ($size | tonumber)}),
-          validation,
-          collections,
-          availableToSearchAll: true,
-          metadata: ($metadata | fromjson),
-          loadedAt: $loadedAt,
-          permissions: (
-            reduce .permissions[] as $perm ({}; . + {($perm): {expiry: null}})
-          )
-        }' "$input_file" > temp.json && mv temp.json "$input_file"
-        echo "File '$input_file' updated successfully."
+        if [[ "$IS_ARRAY" -eq 1 ]]; then
+          jq --arg status "$STATUS" --arg siardVersion "$VERSION" --arg loadedAt "$LOADED_AT" --arg size "$SIZE" --argfile metadata tmp_metadata.json '{
+            version,
+            status: $status,
+            siardVersion: $siardVersion,
+            id,
+            siard: (.siard + {"size": ($size | tonumber)}),
+            validation,
+            collections,
+            availableToSearchAll: true,
+            metadata: $metadata,
+            loadedAt: $loadedAt,
+            permissions: (
+              reduce .permissions[] as $perm ({}; . + {($perm): {expiry: null}})
+            )
+          }' "$input_file" > temp.json && mv temp.json "$input_file"
+          echo "File '$input_file' updated successfully."
+        else
+          jq --arg status "$STATUS" --arg siardVersion "$VERSION" --arg loadedAt "$LOADED_AT" --arg size "$SIZE" --argfile metadata tmp_metadata.json '{
+            version,
+            status: $status,
+            siardVersion: $siardVersion,
+            id,
+            siard: (.siard + {"size": ($size | tonumber)}),
+            validation,
+            collections,
+            availableToSearchAll: true,
+            metadata: $metadata,
+            loadedAt: $loadedAt,
+            permissions
+          }' "$input_file" > temp.json && mv temp.json "$input_file"
+          echo "File '$input_file' updated successfully."
+        fi
       fi
     done
+    rm -f tmp_metadata.json
   fi
 done
 

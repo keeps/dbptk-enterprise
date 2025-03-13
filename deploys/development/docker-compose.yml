@@ -11,8 +11,8 @@ services:
     environment:
       - SOLR_ZOOKEEPER_HOSTS=solr:9983
       - CAS_ENABLED=true
-      - CAS_INTERNAL_URL=http://cas:8080
-      - CAS_EXTERNAL_URL=http://localhost:8181
+      - CAS_INTERNAL_URL=http://cas:8080/cas
+      - CAS_EXTERNAL_URL=http://localhost:8181/cas
       - DBVTK_INTERNAL_URL=http://dbptke:8080
       - DBVTK_EXTERNAL_URL=http://localhost:8080
       - DBPTKE_SHARED_FOLDER=/volumes/siards
@@ -31,8 +31,6 @@ services:
     ports:
       - 8983:8983
     command: -c # Use cloud mode
-    volumes:
-      - solr_data:/var/solr/
   cas:
     image: docker.io/library/cas:latest
     container_name: cas
@@ -62,5 +60,3 @@ services:
 
 networks:
   zoonet:
-volumes:
-  solr_data: 
