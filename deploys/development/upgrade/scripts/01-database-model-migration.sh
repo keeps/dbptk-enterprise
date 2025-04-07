@@ -58,9 +58,10 @@ for subdir in "$DATABASES_DIR"/*; do
     VERSION=$(echo "$DATABASE" | jq -r '.version')
     LOADED_AT=$(echo "$DATABASE" | jq -r '.loadedAt')
     SIZE=$(echo "$DATABASE" | jq -r '.size')
+    ERRORS=$(echo "$DATABASE" | jq -r '.validationErrors')
 
     echo "$DATABASE" | jq '.metadata' > tmp_metadata.json
-
+    
     IS_ARRAY=$(echo "$DATABASE" | jq 'if .permissions | type == "array" then 1 else 0 end')
 
     if [[ "$HTTP_CODE" -ne 200 ]]; then
@@ -77,13 +78,17 @@ for subdir in "$DATABASES_DIR"/*; do
       if [ -f "$input_file" ]; then
         
         if [[ "$IS_ARRAY" -eq 1 ]]; then
-          jq --arg status "$STATUS" --arg siardVersion "$VERSION" --arg loadedAt "$LOADED_AT" --arg size "$SIZE" --argfile metadata tmp_metadata.json '{
+          jq --arg status "$STATUS" --arg siardVersion "$VERSION" --arg loadedAt "$LOADED_AT" --arg size "$SIZE" --arg errors "$ERRORS" --argfile metadata tmp_metadata.json '{
             version,
             status: $status,
             siardVersion: $siardVersion,
             id,
             siard: (.siard + {"size": ($size | tonumber)}),
-            validation,
+            validation: (
+              .validation + {
+                indicators: (.validation.indicators + {errors: $errors})
+              }
+            ),
             collections,
             availableToSearchAll: true,
             metadata: $metadata,
@@ -94,13 +99,17 @@ for subdir in "$DATABASES_DIR"/*; do
           }' "$input_file" > temp.json && mv temp.json "$input_file"
           echo "File '$input_file' updated successfully."
         else
-          jq --arg status "$STATUS" --arg siardVersion "$VERSION" --arg loadedAt "$LOADED_AT" --arg size "$SIZE" --argfile metadata tmp_metadata.json '{
+          jq --arg status "$STATUS" --arg siardVersion "$VERSION" --arg loadedAt "$LOADED_AT" --arg size "$SIZE" --arg errors "$ERRORS" --argfile metadata tmp_metadata.json '{
             version,
             status: $status,
             siardVersion: $siardVersion,
             id,
             siard: (.siard + {"size": ($size | tonumber)}),
-            validation,
+            validation: (
+              .validation + {
+                indicators: (.validation.indicators + {errors: $errors})
+              }
+            ),
             collections,
             availableToSearchAll: true,
             metadata: $metadata,

@@ -2,6 +2,7 @@
 
 This guide outlines the steps required to upgrade DBPTK Enterprise from version 2.X to version 3. 
 Before starting the new version of DBPTK follow these steps.
+A Solr index and a zookeeper data backup is recommended before the start of this proceedure.
 
 ## Add Your Machine's IP Address to DBPTK Whitelist
 
@@ -49,7 +50,8 @@ Replace `<dbptk_home>` with the DBPTK home directory path.
 
 ## Upgrade Solr from Version 8 to 9
 
-DBPTK 3 requires Solr 9. To update Solr's configurations run:
+DBPTK 3 requires Solr 9. Before upgrading your Solr service to version 9, run the following script
+to update its configurations:
 ```bash
 ./scripts/03-solr-upgrade.sh <dbptk_compose_path>
 ```

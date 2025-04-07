@@ -14,7 +14,7 @@ container_name=$(docker compose -f $DOCKER_COMPOSE_PATH run -d -v $(pwd)/../solr
 echo "Updating Solr configuration..."
 
 # Execute the Solr configuration update command inside the container
-docker exec "$container_name" bash -c "for config in \$(solr zk ls /configs -z localhost:9983 | tr -d '[],\"'); do solr zk upconfig -n \$config -d /tmp/solr-config/ -z localhost:9983; done"
+docker exec "$container_name" bash -c "for config in \$(solr zk ls /configs -z localhost:9983 | tr -d '[],\"'); do solr zk upconfig -n \$config -d /tmp/solr-config/ -z localhost:9983; done && curl -X POST -H \"Content-Type: application/json\" --data '{\"delete-field\": {\"name\": \"siard_validation_status\"}}' http://localhost:8983/solr/dbv-databases/schema && curl -X POST -H \"Content-Type: application/json\" --data '{\"add-field\": {\"name\":\"siard_validation_status\", \"type\":\"string\", \"indexed\": true}}' http://localhost:8983/solr/dbv-databases/schema/fields/siard_validation_status"
 
 echo "Solr configuration updated successfully."
 
