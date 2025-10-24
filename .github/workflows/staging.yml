@@ -49,9 +49,9 @@ jobs:
 
     steps:
       - name: Trigger KEEPS GitLab CI/CD
-        uses: appleboy/gitlab-ci-action@master
-        with:
-          host: ${{ secrets.GITLAB_DBPTKE_DEV_TRIGGER }}
-          token: ${{ secrets.GITLAB_DBPTKE_DEV_TRIGGER_TOKEN }}
-          project_id: ${{ secrets.GITLAB_DBPTKE_PROJECT_ID }}
-          ref: 'staging'
+        run: |
+          curl -X POST \
+            --fail \
+            -F token=${{ secrets.GITLAB_DBPTKE_DEV_TRIGGER_TOKEN }} \
+            -F ref=staging \
+            ${{ secrets.GITLAB_DBPTKE_DEV_TRIGGER }}
