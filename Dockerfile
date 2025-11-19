@@ -1,4 +1,4 @@
-FROM openjdk:21
+FROM eclipse-temurin:21-jre-jammy
 LABEL application-name="Database Preservation Toolkit Enterprise" \
       maintainer="admin@keep.pt" \
       vendor="KEEP SOLUTIONS"
