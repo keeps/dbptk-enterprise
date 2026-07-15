@@ -1,7 +1,7 @@
 version: "3.2"
 services:
   dbptke:
-    image: keeps/dbvtk:v3.0.0
+    image: keeps/dbvtk:v4.0.0
     container_name: dbptk-enterprise
     networks:
       - zoonet
@@ -16,23 +16,59 @@ services:
       - DBVTK_INTERNAL_URL=http://dbptke:8080
       - DBVTK_EXTERNAL_URL=http://localhost:8080
       - DBPTKE_SHARED_FOLDER=/volumes/siards
+
+      # DATABASE
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/dbptk_db
+      - SPRING_DATASOURCE_USERNAME=dbptk_user
+      - SPRING_DATASOURCE_PASSWORD=dbptk
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_BATCH_JDBC_PLATFORM=postgresql      
     volumes:
       # configuration overrides
       - ./dbptke/config/dbvtk-viewer.properties:/dbvtk/config/dbvtk-viewer.properties:ro
-      # map /volumes/siards to the desired folder
+      # map /dbvtk/SIARD-files to the desired folder
     depends_on:
       - solr
     entrypoint: java -Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl -Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005 -jar /app.war
   solr:
-    image: solr:9
+    image: solr:10.0.0
     container_name: solr
     networks:
       - zoonet
     ports:
       - 8983:8983
-    command: -c # Use cloud mode
     volumes:
       - solr-data:/var/solr
+  tika:
+    image: apache/tika:3.2.3.0-full
+    restart: unless-stopped
+    networks:
+      - zoonet    
+    command:
+      - "--config /tika-config.xml"
+    ports:
+      - "9998:9998"
+    volumes:
+      - ./dbptke/tika-config/tika-config.xml:/tika-config.xml
+      # map /SIARD-files to the desired folder
+      #- <path_to_SIARD_files_folder>:/SIARD-files
+
+  postgres:
+    image: docker.io/postgres:17
+    restart: unless-stopped
+    networks:
+      - zoonet    
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=dbptk_db
+      - POSTGRES_USER=dbptk_user
+      - POSTGRES_PASSWORD=dbptk
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   cas:
     image: docker.io/library/cas:latest
     container_name: cas
@@ -64,4 +100,6 @@ networks:
   zoonet:
 
 volumes:
-  solr-data:  
+  solr-data:
+  postgres_data:
+  siard_files:
